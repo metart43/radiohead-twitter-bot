@@ -4,7 +4,9 @@ const axios = require("axios");
 const puppeteer = require("puppeteer");
 const getRandomSong = require("./getRandomSong");
 const tweet = require("./tweet.js");
+const dotenv = require("dotenv");
 
+dotenv.config();
 let browser;
 
 const getBrowser = async () => {
@@ -36,11 +38,11 @@ const countParagraphs = (lyrics) => {
 
 const scrapeLyrics = async (song) => {
   try {
+    console.log(song);
     await getBrowser();
     const url = new URL(
       `https://web.archive.org/web/20200706040347/https://www.azlyrics.com/lyrics/radiohead/${song}.html`
     );
-    console.log(url.href);
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(0);
     await page.goto(url.href, {
@@ -50,7 +52,7 @@ const scrapeLyrics = async (song) => {
       const lyricsDiv = document.querySelectorAll(
         "div:not([class]):not([id]):not([style])"
       )[2];
-
+      console.log(lyricsDiv, lyricsDiv.textContent);
       return lyricsDiv ? lyricsDiv.textContent.trim().split("\n") : null;
     });
     return lyrics;
@@ -60,7 +62,7 @@ const scrapeLyrics = async (song) => {
   }
 };
 
-app.get("/", (request, response) => {
+app.get("/tweet", (request, response) => {
   let song, lyrics;
   (async () => {
     try {

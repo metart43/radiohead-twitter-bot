@@ -1,10 +1,13 @@
 const Twitter = require("twitter-lite");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const client = new Twitter({
   consumer_key: process.env.TWITTER_API_KEY, // from Twitter.
   consumer_secret: process.env.TWITTER_API_SECRET, // from Twitter.
   access_token_key: process.env.ACCESS_TOKEN, // from your User (oauth_token)
-  access_token_secret: process.env.ACCESS_TOKEN_SECRET
+  access_token_secret: process.env.ACCESS_TOKEN_SECRET,
 });
 
 const combineLyrics = (lyrics, number) => {
@@ -32,7 +35,7 @@ const tweet = async (lyrics, number) => {
   const status = combineLyrics(lyrics, number);
   console.log(status);
   await client.post("statuses/update", {
-    status
+    status,
   });
 };
 
