@@ -5,6 +5,7 @@ const puppeteer = require("puppeteer");
 const getRandomSong = require("./getRandomSong");
 const tweet = require("./tweet.js");
 const dotenv = require("dotenv");
+const getDiscography = require("get-artist-discography/getDiscography");
 
 dotenv.config();
 let browser;
@@ -64,17 +65,15 @@ const scrapeLyrics = async (song) => {
 
 app.get("/tweet", (request, response) => {
   let song, lyrics;
+  const artistID = "4Z8W4fKeB5YxbusRsdQVPb";
+  const limit = "38";
   (async () => {
     try {
       getBrowser();
-      const url = "https://strong-boulder-mouth.glitch.me/";
-      const res = await axios({
-        method: "GET",
-        url,
-      });
-      const { data } = res;
+      const discography = await getDiscography(artistID, limit);
+      console.log(discography);
       do {
-        song = getRandomSong(data);
+        song = getRandomSong(discography);
         lyrics = await scrapeLyrics(song);
       } while (!lyrics);
       const numberOfParagraphs = countParagraphs(lyrics);
