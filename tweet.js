@@ -31,9 +31,9 @@ const combineLyrics = (lyrics, number) => {
   return status;
 };
 
-const tweet = async (lyrics, number) => {
-  const status = combineLyrics(lyrics, number);
-  console.log(status);
+const tweet = async (lyrics, number, copyright) => {
+  let status = combineLyrics(lyrics, number);
+  status += copyright;
   await client.post("statuses/update", {
     status,
   });
