@@ -1,13 +1,8 @@
-const express = require("express");
-const app = express();
 const puppeteer = require("puppeteer");
 const getRandomSong = require("./getRandomSong");
 const tweet = require("./tweet.js");
-const dotenv = require("dotenv");
 const getDiscography = require("get-artist-discography/getDiscography");
 const proxtList = require("./proxy-list.json");
-
-dotenv.config();
 
 const getBrowser = async () => {
   //helper function to launch browser. Function is beign reused to make sure browser is running.
@@ -15,6 +10,9 @@ const getBrowser = async () => {
   try {
     browser = await puppeteer.launch({
       headless: true,
+      executablePath: process.env.IS_LOCAL
+        ? undefined
+        : "/var/task/headless_shell",
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
@@ -24,6 +22,7 @@ const getBrowser = async () => {
     });
     return browser;
   } catch (e) {
+    console.log(e);
     return null;
   }
 };
@@ -59,7 +58,7 @@ const scrapeLyrics = async (song) => {
   }
 };
 
-app.get("/tweet", (request, response) => {
+module.exports.bot = (event, context, callback) => {
   let lyrics, tryLimit;
   let copyright = "\n\n \u00A9 @Radiohead";
   const artistID = "4Z8W4fKeB5YxbusRsdQVPb";
@@ -67,6 +66,7 @@ app.get("/tweet", (request, response) => {
   (async () => {
     try {
       const discography = await getDiscography(artistID, limit);
+      console.log(discography);
       do {
         const { url, song, date, albumName } = getRandomSong(discography);
         lyrics = await scrapeLyrics(url);
@@ -75,14 +75,13 @@ app.get("/tweet", (request, response) => {
       } while (!lyrics || tryLimit <= 15);
       const numberOfParagraphs = countParagraphs(lyrics);
       await tweet(lyrics, numberOfParagraphs, copyright);
-      response.end("success");
+      return callback(null, { body: JSON.stringify({ message: "success" }) });
     } catch (e) {
-      response.send(e);
+      console.log(e);
+      return callback(null, {
+        statusCode: 500,
+        body: JSON.stringify(e),
+      });
     }
   })();
-});
-
-// listen for requests :)
-const listener = app.listen(process.env.PORT, () => {
-  console.log("Your app is listening on port " + listener.address().port);
-});
+};

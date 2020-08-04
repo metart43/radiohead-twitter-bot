@@ -1,18 +1,13 @@
 {
-  "//1": "describes your app and its dependencies",
-  "//2": "https://docs.npmjs.com/files/package.json",
-  "//3": "updating this file will download and update your packages",
   "name": "radiohead-twitter-bot",
   "version": "0.0.1",
-  "description": "A simple Node app built on Express, instantly up and running.",
-  "main": "server.js",
+  "description": "Twitter bot scrappers Radiohead lyrics from AZLyrics.com",
+  "main": "handler.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "nodemon ./handlers localhost 3002"
   },
   "dependencies": {
     "axios": "0.19.2",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
     "get-artist-discography": "0.0.4",
     "puppeteer": "5.2.0",
     "twitter-lite": "0.14.0"
@@ -26,7 +21,9 @@
   "license": "MIT",
   "keywords": [
     "node",
-    "glitch",
-    "express"
+    "radiohead",
+    "twitter-bot",
+    "radiohead-bot",
+    "scrape lyrics"
   ]
 }
