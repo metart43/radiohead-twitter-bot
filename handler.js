@@ -1,4 +1,5 @@
-const puppeteer = require("puppeteer");
+const chromium = require("chrome-aws-lambda");
+const puppeteer = chromium.puppeteer;
 const getRandomSong = require("./getRandomSong");
 const tweet = require("./tweet.js");
 const getDiscography = require("get-artist-discography/getDiscography");
@@ -10,9 +11,7 @@ const getBrowser = async () => {
   try {
     browser = await puppeteer.launch({
       headless: true,
-      executablePath: process.env.IS_LOCAL
-        ? undefined
-        : "/var/task/headless_shell",
+      executablePath: await chromium.executablePath,
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
@@ -35,8 +34,9 @@ const countParagraphs = (lyrics) => {
 };
 
 const scrapeLyrics = async (song) => {
+  let browser;
   try {
-    const browser = await getBrowser();
+    browser = await getBrowser();
     const url = new URL(
       `https://www.azlyrics.com/lyrics/radiohead/${song}.html`
     );
@@ -55,6 +55,8 @@ const scrapeLyrics = async (song) => {
   } catch (e) {
     console.log(e);
     return null;
+  } finally {
+    if (browser) await browser.close();
   }
 };
 

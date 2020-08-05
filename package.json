@@ -8,8 +8,9 @@
   },
   "dependencies": {
     "axios": "0.19.2",
+    "chrome-aws-lambda": "^5.2.0",
     "get-artist-discography": "0.0.4",
-    "puppeteer": "5.2.0",
+    "puppeteer-core": "^5.2.0",
     "twitter-lite": "0.14.0"
   },
   "engines": {
@@ -25,5 +26,8 @@
     "twitter-bot",
     "radiohead-bot",
     "scrape lyrics"
-  ]
+  ],
+  "devDependencies": {
+    "puppeteer": "^5.2.1"
+  }
 }
