@@ -1,15 +1,15 @@
 const chromium = require("chrome-aws-lambda");
-const puppeteer = chromium.puppeteer;
 const getRandomSong = require("./getRandomSong");
 const tweet = require("./tweet.js");
 const getDiscography = require("get-artist-discography/getDiscography");
 const proxtList = require("./proxy-list.json");
 
 const getBrowser = async () => {
+  console.log("HERE");
   //helper function to launch browser. Function is beign reused to make sure browser is running.
   const proxy = proxtList[Math.floor(Math.random() * Math.floor(2004))];
   try {
-    browser = await puppeteer.launch({
+    browser = await chromium.puppeteer.launch({
       headless: true,
       executablePath: await chromium.executablePath,
       args: [
@@ -21,7 +21,7 @@ const getBrowser = async () => {
     });
     return browser;
   } catch (e) {
-    console.log(e);
+    console.log("errorBrowser", e);
     return null;
   }
 };
@@ -53,37 +53,34 @@ const scrapeLyrics = async (song) => {
     });
     return lyrics;
   } catch (e) {
-    console.log(e);
+    console.log("scraper", e);
     return null;
   } finally {
     if (browser) await browser.close();
   }
 };
 
-module.exports.bot = (event, context, callback) => {
+module.exports.bot = async (event, context) => {
   let lyrics, tryLimit;
   let copyright = "\n\n \u00A9 @Radiohead";
   const artistID = "4Z8W4fKeB5YxbusRsdQVPb";
   const limit = "38";
-  (async () => {
-    try {
-      const discography = await getDiscography(artistID, limit);
-      console.log(discography);
-      do {
-        const { url, song, date, albumName } = getRandomSong(discography);
-        lyrics = await scrapeLyrics(url);
-        copyright += ` - ${song} \n${date} #${albumName}`;
-        tryLimit += 1;
-      } while (!lyrics || tryLimit <= 15);
-      const numberOfParagraphs = countParagraphs(lyrics);
-      await tweet(lyrics, numberOfParagraphs, copyright);
-      return callback(null, { body: JSON.stringify({ message: "success" }) });
-    } catch (e) {
-      console.log(e);
-      return callback(null, {
-        statusCode: 500,
-        body: JSON.stringify(e),
-      });
-    }
-  })();
+  try {
+    const discography = await getDiscography(artistID, limit);
+    do {
+      const { url, song, date, albumName } = getRandomSong(discography);
+      lyrics = await scrapeLyrics(url);
+      copyright += ` - ${song} \n${date} #${albumName}`;
+      tryLimit += 1;
+    } while (!lyrics || tryLimit <= 15);
+    const numberOfParagraphs = countParagraphs(lyrics);
+    await tweet(lyrics, numberOfParagraphs, copyright);
+    return { body: JSON.stringify({ message: "success" }) };
+  } catch (e) {
+    console.log("main", e);
+    return {
+      statusCode: 500,
+      body: JSON.stringify(e, event, context),
+    };
+  }
 };
