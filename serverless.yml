@@ -11,7 +11,6 @@ custom:
 
 package:
   exclude:
-    - chrome-aws-lambda/**
     - node_modules/chrome-aws-lambda/**
     - node_modules/puppeteer/**
 
@@ -20,7 +19,7 @@ functions:
     handler: handler.bot
     timeout: 30
     layers:
-      - arn:aws:lambda:us-east-1:764866452798:layer:chrome-aws-lambda:19
+      - arn:aws:lambda:us-east-1:764866452798:layer:chrome-aws-lambda:18
     events:
       - schedule: cron(22 22 * * ? *)
     environment:
