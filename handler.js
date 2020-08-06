@@ -17,8 +17,11 @@ const getBrowser = async () => {
         "--disable-setuid-sandbox",
         `--proxy-server=${proxy}`,
         "--proxy-bypass-list=*",
+        "--single-process",
+        "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36",
       ],
     });
+    console.log(proxy);
     return browser;
   } catch (e) {
     console.log(e);
@@ -41,49 +44,44 @@ const scrapeLyrics = async (song) => {
       `https://www.azlyrics.com/lyrics/radiohead/${song}.html`
     );
     const page = await browser.newPage();
+    console.log(await browser.userAgent());
     page.setDefaultNavigationTimeout(0);
     await page.goto(url.href, {
       waitUntil: "networkidle2",
     });
+    console.log(await page.content());
     const lyrics = await page.evaluate(() => {
       const lyricsDiv = document.querySelector(
         "div:not([class]):not([id]):not([style])"
       );
+      console.log("doc", document);
+      console.log("lyricsDiv", lyricsDiv);
       return lyricsDiv ? lyricsDiv.textContent.trim().split("\n") : null;
     });
+    console.log("lyrics", lyrics);
+    if (browser) await browser.close();
     return lyrics;
   } catch (e) {
     console.log(e);
     return null;
-  } finally {
-    if (browser) await browser.close();
   }
 };
 
-module.exports.bot = (event, context, callback) => {
+module.exports.bot = async (event, context, callback) => {
   let lyrics, tryLimit;
   let copyright = "\n\n \u00A9 @Radiohead";
   const artistID = "4Z8W4fKeB5YxbusRsdQVPb";
   const limit = "38";
-  (async () => {
-    try {
-      const discography = await getDiscography(artistID, limit);
-      console.log(discography);
-      do {
-        const { url, song, date, albumName } = getRandomSong(discography);
-        lyrics = await scrapeLyrics(url);
-        copyright += ` - ${song} \n${date} #${albumName}`;
-        tryLimit += 1;
-      } while (!lyrics || tryLimit <= 15);
-      const numberOfParagraphs = countParagraphs(lyrics);
-      await tweet(lyrics, numberOfParagraphs, copyright);
-      return callback(null, { body: JSON.stringify({ message: "success" }) });
-    } catch (e) {
-      console.log(e);
-      return callback(null, {
-        statusCode: 500,
-        body: JSON.stringify(e),
-      });
-    }
-  })();
+  const discography = await getDiscography(artistID, limit);
+  do {
+    const { url, song, date, albumName } = getRandomSong(discography);
+    lyrics = await scrapeLyrics(url);
+    copyright += ` - ${song} \n${date} #${albumName}`;
+    tryLimit += 1;
+    console.log("scrapedLyrics", lyrics);
+  } while (!lyrics || tryLimit <= 3);
+  const numberOfParagraphs = countParagraphs(lyrics);
+  console.log("numberOfParagraphs", numberOfParagraphs);
+  await tweet(lyrics, numberOfParagraphs, copyright);
+  return { message: "success" };
 };
