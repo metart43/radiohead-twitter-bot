@@ -11,6 +11,7 @@ const getRandomSong = (discography) => {
   const songsLength = album["songs"].length;
   const song = album["songs"][getRandomInt(songsLength)];
   const date = album["release_date"];
+  console.log("RanndomSongFuncsong", song);
   if (song.includes("-")) {
     return {
       url: song

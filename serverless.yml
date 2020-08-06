@@ -9,19 +9,32 @@ provider:
 custom:
   env: ${file(./creds.yml)}
 
+<<<<<<< HEAD
 # package:
 #   exclude:
 #     - node_modules/chrome-aws-lambda/**
 
 plugins:
   - serverless-offline
+=======
+package:
+  exclude:
+    - node_modules/chrome-aws-lambda/**
+    - node_modules/puppeteer/**
+    - node_modules/puppeteer-core/**
+>>>>>>> aws
 
 functions:
   bot:
     handler: handler.bot
     timeout: 30
+<<<<<<< HEAD
     # layers:
     #   - arn:aws:lambda:us-east-1:764866452798:layer:chrome-aws-lambda:19
+=======
+    layers:
+      - arn:aws:lambda:us-east-1:764866452798:layer:chrome-aws-lambda:18
+>>>>>>> aws
     events:
       - schedule: cron(22 22 * * ? *)
     environment:
