@@ -67,35 +67,11 @@ const scrapeLyrics = async (song) => {
   }
 };
 
-<<<<<<< HEAD
-module.exports.bot = async (event, context) => {
-=======
 module.exports.bot = async (event, context, callback) => {
->>>>>>> aws
   let lyrics, tryLimit;
   let copyright = "\n\n \u00A9 @Radiohead";
   const artistID = "4Z8W4fKeB5YxbusRsdQVPb";
   const limit = "38";
-<<<<<<< HEAD
-  try {
-    const discography = await getDiscography(artistID, limit);
-    do {
-      const { url, song, date, albumName } = getRandomSong(discography);
-      lyrics = await scrapeLyrics(url);
-      copyright += ` - ${song} \n${date} #${albumName}`;
-      tryLimit += 1;
-    } while (!lyrics || tryLimit <= 15);
-    const numberOfParagraphs = countParagraphs(lyrics);
-    await tweet(lyrics, numberOfParagraphs, copyright);
-    return { body: JSON.stringify({ message: "success" }) };
-  } catch (e) {
-    console.log("main", e);
-    return {
-      statusCode: 500,
-      body: JSON.stringify(e, event, context),
-    };
-  }
-=======
   const discography = await getDiscography(artistID, limit);
   do {
     const { url, song, date, albumName } = getRandomSong(discography);
@@ -108,5 +84,4 @@ module.exports.bot = async (event, context, callback) => {
   console.log("numberOfParagraphs", numberOfParagraphs);
   await tweet(lyrics, numberOfParagraphs, copyright);
   return { message: "success" };
->>>>>>> aws
 };
