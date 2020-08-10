@@ -1,5 +1,5 @@
 const getRandomInt = (max) => {
-  const number = Math.floor(Math.random() * Math.floor(max));
+  const number = Math.floor(Math.random() * max);
   return number === 23 || number === 20 || number === 8 || number === 2
     ? getRandomInt(max)
     : number;
@@ -10,22 +10,23 @@ const getRandomSong = (discography) => {
   const album = discography[albumNumber][albumName];
   const songsLength = album["songs"].length;
   const song = album["songs"][getRandomInt(songsLength)];
-  const date = album["release_date"];
-  console.log("RanndomSongFuncsong", song);
+  const date = album["release_date"] || "";
   if (song.includes("-")) {
     return {
       url: song
         .toLowerCase()
         .split("-")[0]
-        .replace(/[^\w\S]/gi, ""),
+        .replace(/[^A-Z0-9]+/gi, ""),
       song,
+      date,
+      albumName: albumName.replace(/ /g, ""),
     };
   } else {
     return {
-      url: song.toLowerCase().replace(/[^\w\S]/gi, ""),
+      url: song.toLowerCase().replace(/[^A-Z0-9]+/gi, ""),
       song,
-      albumName: albumName.replace(/ /g, ""),
       date,
+      albumName: albumName.replace(/ /g, ""),
     };
   }
 };

@@ -1,33 +1,7 @@
-const chromium = require("chrome-aws-lambda");
 const getRandomSong = require("./getRandomSong");
 const tweet = require("./tweet.js");
 const getDiscography = require("get-artist-discography/getDiscography");
-const proxtList = require("./proxy-list.json");
-
-const getBrowser = async () => {
-  console.log("HERE");
-  //helper function to launch browser. Function is beign reused to make sure browser is running.
-  const proxy = proxtList[Math.floor(Math.random() * Math.floor(2004))];
-  try {
-    browser = await chromium.puppeteer.launch({
-      headless: true,
-      executablePath: await chromium.executablePath,
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        `--proxy-server=${proxy}`,
-        "--proxy-bypass-list=*",
-        "--single-process",
-        "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36",
-      ],
-    });
-    console.log(proxy);
-    return browser;
-  } catch (e) {
-    console.log("errorBrowser", e);
-    return null;
-  }
-};
+const scrapeLyrics = require("./scrapeLyrics");
 
 const countParagraphs = (lyrics) => {
   const reducer = (accumulator, currentValue) =>
@@ -36,52 +10,29 @@ const countParagraphs = (lyrics) => {
   return number;
 };
 
-const scrapeLyrics = async (song) => {
-  let browser;
-  try {
-    browser = await getBrowser();
-    const url = new URL(
-      `https://www.azlyrics.com/lyrics/radiohead/${song}.html`
-    );
-    const page = await browser.newPage();
-    console.log(await browser.userAgent());
-    page.setDefaultNavigationTimeout(0);
-    await page.goto(url.href, {
-      waitUntil: "networkidle2",
-    });
-    console.log(await page.content());
-    const lyrics = await page.evaluate(() => {
-      const lyricsDiv = document.querySelector(
-        "div:not([class]):not([id]):not([style])"
-      );
-      console.log("doc", document);
-      console.log("lyricsDiv", lyricsDiv);
-      return lyricsDiv ? lyricsDiv.textContent.trim().split("\n") : null;
-    });
-    console.log("lyrics", lyrics);
-    if (browser) await browser.close();
-    return lyrics;
-  } catch (e) {
-    console.log("scraper", e);
-    return null;
-  }
-};
-
-module.exports.bot = async (event, context, callback) => {
-  let lyrics, tryLimit;
-  let copyright = "\n\n \u00A9 @Radiohead";
-  const artistID = "4Z8W4fKeB5YxbusRsdQVPb";
-  const limit = "38";
+module.exports.bot = async (
+  event,
+  context,
+  callback,
+  artist = "radiohead",
+  artistID = "4Z8W4fKeB5YxbusRsdQVPb",
+  limit = 38,
+  copyright = "\n\n \u00A9 @Radiohead",
+  tweetId = null
+) => {
+  let lyrics, songInfo;
+  tryLimit = 0;
   const discography = await getDiscography(artistID, limit);
+  // console.log(discography);
   do {
     const { url, song, date, albumName } = getRandomSong(discography);
-    lyrics = await scrapeLyrics(url);
-    copyright += ` - ${song} \n${date} #${albumName}`;
+    lyrics = await scrapeLyrics(artist, url);
+    songInfo = ` - ${song} \n${date} #${albumName}`;
     tryLimit += 1;
-    console.log("scrapedLyrics", lyrics);
-  } while (!lyrics || tryLimit <= 3);
+    console.log("tryLimit", tryLimit);
+  } while (!lyrics && tryLimit <= 10);
+  copyright += songInfo;
   const numberOfParagraphs = countParagraphs(lyrics);
-  console.log("numberOfParagraphs", numberOfParagraphs);
-  await tweet(lyrics, numberOfParagraphs, copyright);
+  await tweet(lyrics, numberOfParagraphs, copyright, tweetId);
   return { message: "success" };
 };

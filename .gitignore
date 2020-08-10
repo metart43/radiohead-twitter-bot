@@ -2,6 +2,5 @@
 node_modules
 jspm_packages
 proxy-list.json
-creds.yml
 # Serverless directories
 .serverless

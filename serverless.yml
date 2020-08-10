@@ -5,9 +5,13 @@ service: radiohead-twitter-bot
 provider:
   name: aws
   runtime: nodejs12.x
-
-custom:
-  env: ${file(./creds.yml)}
+  environment:
+    TWITTER_API_KEY: ${param:TWITTER_API_KEY}
+    TWITTER_API_SECRET: ${param:TWITTER_API_SECRET}
+    ACCESS_TOKEN: ${param:ACCESS_TOKEN}
+    ACCESS_TOKEN_SECRET: ${param:ACCESS_TOKEN_SECRET}
+    SPOTIFY_CLIENT_SECRET: ${param:SPOTIFY_CLIENT_SECRET}
+    SPOTIFY_CLIENT_ID: ${param:SPOTIFY_CLIENT_ID}
 
 package:
   exclude:
@@ -21,12 +25,6 @@ functions:
     timeout: 30
     layers:
       - arn:aws:lambda:us-east-1:764866452798:layer:chrome-aws-lambda:18
-    events:
-      - schedule: cron(22 22 * * ? *)
-    environment:
-      TWITTER_API_KEY: ${self:custom.env.TWITTER_API_KEY}
-      TWITTER_API_SECRET: ${self:custom.env.TWITTER_API_SECRET}
-      ACCESS_TOKEN: ${self:custom.env.ACCESS_TOKEN}
-      ACCESS_TOKEN_SECRET: ${self:custom.env.ACCESS_TOKEN_SECRET}
-      SPOTIFY_CLIENT_SECRET: ${self:custom.env.SPOTIFY_CLIENT_SECRET}
-      SPOTIFY_CLIENT_ID: ${self:custom.env.SPOTIFY_CLIENT_ID}
+  listen:
+    handler: listen.stream
+    timeout: 30
