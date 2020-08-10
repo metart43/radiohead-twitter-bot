@@ -11,20 +11,22 @@ const getRandomSong = (discography) => {
   const songsLength = album["songs"].length;
   const song = album["songs"][getRandomInt(songsLength)];
   const date = album["release_date"] || "";
-  const copyright = ` - ${song} \n${date} #${albumName.replace(/ /g, "")}`;
-  console.log("songs", song);
   if (song.includes("-")) {
     return {
       url: song
         .toLowerCase()
         .split("-")[0]
         .replace(/[^A-Z0-9]+/gi, ""),
-      copyright,
+      song,
+      date,
+      albumName: albumName.replace(/ /g, ""),
     };
   } else {
     return {
       url: song.toLowerCase().replace(/[^A-Z0-9]+/gi, ""),
-      copyright,
+      song,
+      date,
+      albumName: albumName.replace(/ /g, ""),
     };
   }
 };

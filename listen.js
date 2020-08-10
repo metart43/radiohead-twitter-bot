@@ -2,8 +2,8 @@ const client = require("./client");
 const handler = require("./handler");
 
 const parameters = {
-  track: "#radioheadbot",
-  follow: "1129880023161278465", // @OrchardAI, @tylerbuchea
+  track: "#radioheadbot,@bot4radiohead,#bot4radiohead",
+  follow: "110509537,108382988,2192998782", // @OrchardAI, @tylerbuchea
 };
 
 module.exports.stream = async () =>
@@ -12,13 +12,24 @@ module.exports.stream = async () =>
     .on("start", (response) => {
       console.log("start");
     })
-    .on("data", (tweet) => {
-      console.log("data", tweet);
+    .on("data", ({ id_str, text, user }) => {
+      console.log(
+        "text:",
+        text,
+        "\n",
+        "userName:",
+        user.name,
+        "\n",
+        "decription:",
+        user.description
+      );
       const limit = 20;
       const artist = "thomyorke";
       const copyright = "\n\n \u00A9 @thomyorke";
       const thomYorkeID = "4CvTDPKA6W06DRfBnZKrau";
-      handler.bot(_, _, _, artist, thomYorkeID, limit, copyright, tweet.id);
+      text.includes("@thomyorke")
+        ? handler.bot(_, _, _, artist, thomYorkeID, limit, copyright, id_str)
+        : handler.bot();
     })
     .on("error", (error) => console.log("error", error))
     .on("end", (response) => console.log("end"));

@@ -20,18 +20,18 @@ module.exports.bot = async (
   copyright = "\n\n \u00A9 @Radiohead",
   tweetId = null
 ) => {
-  console.log(artistID, limit, copyright);
-  let lyrics,
-    tryLimit = 0;
+  let lyrics, songInfo;
+  tryLimit = 0;
   const discography = await getDiscography(artistID, limit);
   // console.log(discography);
   do {
     const { url, song, date, albumName } = getRandomSong(discography);
     lyrics = await scrapeLyrics(artist, url);
-    copyright += ` - ${song || ""} \n${date || ""} #${albumName || ""}`;
+    songInfo = ` - ${song} \n${date} #${albumName}`;
     tryLimit += 1;
     console.log("tryLimit", tryLimit);
   } while (!lyrics && tryLimit <= 10);
+  copyright += songInfo;
   const numberOfParagraphs = countParagraphs(lyrics);
   await tweet(lyrics, numberOfParagraphs, copyright, tweetId);
   return { message: "success" };
