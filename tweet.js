@@ -43,7 +43,7 @@ const tweet = async (lyrics, number, copyright, tweetId) => {
       auto_populate_reply_metadata: true,
     });
     response = "Success";
-    console.log("text:", text);
+    console.log("delivery text:", text);
   } catch (e) {
     response = e;
   } finally {
