@@ -10,19 +10,12 @@ const countParagraphs = (lyrics) => {
   return number;
 };
 
-module.exports.bot = async (
-  event,
-  context,
-  callback,
-  artist = "radiohead",
-  artistID = "4Z8W4fKeB5YxbusRsdQVPb",
-  limit = 38,
-  copyright = "\n\n \u00A9 @Radiohead",
-  tweetId = null
-) => {
+module.exports.bot = async (event, context, callback, artistInfo) => {
+  const { limit, artist, tweetId, artistId } = artistInfo;
+  let { copyright } = artistInfo;
   let lyrics, songInfo;
   tryLimit = 0;
-  const discography = await getDiscography(artistID, limit);
+  const discography = await getDiscography(artistId, limit);
   // console.log(discography);
   do {
     const { url, song, date, albumName } = getRandomSong(discography);
