@@ -4,7 +4,7 @@
   "description": "Twitter bot scrappers Radiohead lyrics from AZLyrics.com",
   "main": "handler.js",
   "dependencies": {
-    "axios": "0.19.2",
+    "axios": "0.21.1",
     "chrome-aws-lambda": "^5.2.0",
     "get-artist-discography": "0.0.4",
     "puppeteer-core": "^5.2.1",
