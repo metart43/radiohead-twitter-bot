@@ -4,3 +4,5 @@ jspm_packages
 proxy-list.json
 # Serverless directories
 .serverless
+
+.env

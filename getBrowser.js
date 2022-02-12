@@ -1,12 +1,13 @@
 const chromium = require("chrome-aws-lambda");
-const proxtList = require("./proxy-list.json");
+// const proxtList = require("./proxy-list.json");
 
 const getBrowser = async () => {
   //helper function to launch browser. Function is beign reused to make sure browser is running.
-  const proxy = proxtList[Math.floor(Math.random() * 2004)];
+  // const proxy = proxtList[Math.floor(Math.random() * 2004)];
+  const proxy = "";
   try {
     browser = await chromium.puppeteer.launch({
-      headless: true,
+      headless: false,
       executablePath: await chromium.executablePath,
       args: [
         "--no-sandbox",
@@ -19,7 +20,7 @@ const getBrowser = async () => {
     });
     return browser;
   } catch (e) {
-    console.log("errorBrowser", e);
+    console.log("getBrowser.js => ", e);
     return null;
   }
 };

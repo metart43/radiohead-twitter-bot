@@ -4,14 +4,14 @@
   "description": "Twitter bot scrappers Radiohead lyrics from AZLyrics.com",
   "main": "handler.js",
   "dependencies": {
-    "axios": "0.19.2",
-    "chrome-aws-lambda": "^5.2.0",
+    "axios": "^0.25.0",
+    "chrome-aws-lambda": "^10.1.0",
     "get-artist-discography": "0.0.4",
-    "puppeteer-core": "^5.2.1",
-    "twitter-lite": "0.14.0"
+    "puppeteer-core": "^13.3.1",
+    "twitter-lite": "^1.1.0"
   },
   "engines": {
-    "node": "12.x"
+    "node": "14.x"
   },
   "repository": {
     "url": "https://github.com/metart43/radiohead-twittter-bot/"
@@ -25,7 +25,11 @@
     "scrape lyrics"
   ],
   "devDependencies": {
-    "puppeteer": "^5.2.1",
+    "prettier": "^2.5.1",
+    "puppeteer": "^13.3.1",
     "serverless-offline": "^6.5.0"
+  },
+  "env": {
+    "__DEV__": "true"
   }
 }

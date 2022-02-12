@@ -10,22 +10,23 @@ const countParagraphs = (lyrics) => {
   return number;
 };
 
-module.exports.bot = async (event, context, callback, artistInfo) => {
-  const { limit, artist, tweetId, artistId } = artistInfo;
-  let { copyright } = artistInfo;
-  let lyrics, songInfo;
-  tryLimit = 0;
-  const discography = await getDiscography(artistId, limit);
-  // console.log(discography);
+module.exports.bot = async (params) => {
+  console.log('handler.js => step 1', { params })
+  let { copyright, artistId, limit, artist, tweetId } = params
+  let lyrics, songInfo
+  tryLimit = 0
+  const discography = await getDiscography(artistId, limit)
+  console.log('handler.js => step 2', { discography })
   do {
-    const { url, song, date, albumName } = getRandomSong(discography);
-    lyrics = await scrapeLyrics(artist, url);
-    songInfo = ` - ${song} \n${date} #${albumName}`;
-    tryLimit += 1;
-    console.log("tryLimit", tryLimit);
-  } while (!lyrics && tryLimit <= 10);
-  copyright += songInfo;
-  const numberOfParagraphs = countParagraphs(lyrics);
-  await tweet(lyrics, numberOfParagraphs, copyright, tweetId);
-  return { message: "success" };
-};
+    const { song, date, albumName } = getRandomSong(discography)
+    lyrics = await scrapeLyrics({ artist, song })
+    songInfo = ` - ${song} \n${date} #${albumName}`
+    tryLimit += 1
+    console.log('tryLimit', tryLimit)
+  } while (!lyrics && tryLimit <= 10)
+  copyright += songInfo
+  const numberOfParagraphs = countParagraphs(lyrics)
+  console.log('handler.js => step 3', { numberOfParagraphs })
+  await tweet(lyrics, numberOfParagraphs, copyright, tweetId)
+  return { message: 'success' }
+}
