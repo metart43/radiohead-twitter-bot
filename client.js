@@ -1,3 +1,4 @@
+require("dotenv").config();
 const Twitter = require("twitter-lite");
 
 const client = new Twitter({

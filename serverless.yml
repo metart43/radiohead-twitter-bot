@@ -4,7 +4,7 @@ service: radiohead-twitter-bot
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   environment:
     TWITTER_API_KEY: ${param:TWITTER_API_KEY}
     TWITTER_API_SECRET: ${param:TWITTER_API_SECRET}

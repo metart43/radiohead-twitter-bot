@@ -10,22 +10,25 @@ const countParagraphs = (lyrics) => {
   return number;
 };
 
-module.exports.bot = async (event, context, callback, artistInfo) => {
-  const { limit, artist, tweetId, artistId } = artistInfo;
-  let { copyright } = artistInfo;
+module.exports.bot = async (params) => {
+  let { copyright, artistId, limit, artist, tweetId } = params;
   let lyrics, songInfo;
   tryLimit = 0;
   const discography = await getDiscography(artistId, limit);
-  // console.log(discography);
   do {
-    const { url, song, date, albumName } = getRandomSong(discography);
-    lyrics = await scrapeLyrics(artist, url);
+    const { song, date, albumName } = getRandomSong(discography);
+    lyrics = await scrapeLyrics({ artist, song });
     songInfo = ` - ${song} \n${date} #${albumName}`;
     tryLimit += 1;
     console.log("tryLimit", tryLimit);
   } while (!lyrics && tryLimit <= 10);
   copyright += songInfo;
-  const numberOfParagraphs = countParagraphs(lyrics);
-  await tweet(lyrics, numberOfParagraphs, copyright, tweetId);
-  return { message: "success" };
-};
+  if (lyrics && lyrics.length > 0) {
+    const numberOfParagraphs = countParagraphs(lyrics);
+    await tweet(lyrics, numberOfParagraphs, copyright, tweetId);
+    return { message: "success" };
+  } else {
+    console.log("handler.js =>", { lyrics });
+    return { message: "error" };
+  }
+}

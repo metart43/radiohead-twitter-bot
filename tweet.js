@@ -29,25 +29,25 @@ const combineLyrics = (lyrics, number) => {
 };
 
 const tweet = async (lyrics, number, copyright, tweetId) => {
-  let status = combineLyrics(lyrics, number);
-  let response;
-  if (status.length > 280) {
-    handler.bot();
-  } else if (status.length + copyright.length < 280) {
-    status += copyright;
+  let tweetText = combineLyrics(lyrics, number)
+  let status
+  if (tweetText.length > 280) {
+    handler.bot()
+  } else if (tweetText.length + copyright.length < 280) {
+    tweetText += copyright
   }
   try {
-    const { text } = await client.post("statuses/update", {
-      status,
+    const { text } = await client.post('statuses/update', {
+      status: tweetText,
       in_reply_to_status_id: tweetId,
-      auto_populate_reply_metadata: true,
-    });
-    response = "Success";
-    console.log("delivery text:", text);
+      auto_populate_reply_metadata: true
+    })
+    status = 'success'
+    console.log('tweet.js tweeted text:', text)
   } catch (e) {
-    response = e;
+    status = e
   } finally {
-    console.log(response);
+    console.log('tweet.js status => ', status)
   }
 };
 
