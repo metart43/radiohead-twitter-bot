@@ -11,7 +11,7 @@ const parameters = {
 
 const likeParams = {
   track:
-    "#radiohead, #thomyorke, #thesmileband, #thom_yorke, radiohead, thom yorke, thesmileband, thom_yorke",
+    "#radiohead, #thomyorke, #thesmileband, #thom_yorke, radiohead, thom yorke, thesmileband, thom_yorke, thomyorke",
   follow: `${smileIdTwitterId}, ${radioheadTwitterId}, ${thomYorkeTwitterId}`,
 };
 
