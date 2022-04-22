@@ -2,6 +2,7 @@ const getRandomSong = require("./getRandomSong");
 const tweet = require("./tweet.js");
 const getDiscography = require("get-artist-discography/getDiscography");
 const scrapeLyrics = require("./scrapeLyrics");
+const client = require("./client");
 
 const countParagraphs = (lyrics) => {
   const reducer = (accumulator, currentValue) =>
@@ -23,12 +24,22 @@ module.exports.bot = async (params) => {
     console.log("tryLimit", tryLimit);
   } while (!lyrics && tryLimit <= 10);
   copyright += songInfo;
+  console.log("handler.js =>", { lyrics });
   if (lyrics && lyrics.length > 0) {
     const numberOfParagraphs = countParagraphs(lyrics);
     await tweet(lyrics, numberOfParagraphs, copyright, tweetId);
-    return { message: "success" };
+    console.log({ message: "success" });
   } else {
-    console.log("handler.js =>", { lyrics });
-    return { message: "error" };
+    console.log({ message: "couldn't generate lyrics" });
   }
-}
+};
+
+module.exports.likeTweet = async (params) => {
+  const { id } = params;
+  try {
+    await client.post("favorites/create", { id });
+    console.log("handler.js liked tweet");
+  } catch (e) {
+    console.log("handler.js#likeTweet#error liking tweet", e);
+  }
+};

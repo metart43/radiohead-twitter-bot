@@ -15,6 +15,7 @@ const scrapeLyrics = async ({ artist, song }) => {
   try {
     browser = await getBrowser();
     const url = new URL(`https://search.azlyrics.com/search.php?q=${artist}-${song}`);
+    console.log("url for scraping", url);
     page = await browser.newPage();
     page.setDefaultNavigationTimeout(0);
     await page.goto(url.href);
