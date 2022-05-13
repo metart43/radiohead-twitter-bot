@@ -25,7 +25,15 @@ const sendScheduleTweet = () => {
     limit: 38,
     copyright: "\n\n \u00A9 @Radiohead",
     tweetId: null,
-  };
+  }; 
+
+  const atomsForPeaceParams = {
+    artist: "atoms for peace",
+    artistId: "7tA9Eeeb68kkiG9Nrvuzmi",
+    limit: 12,
+    copyright: "\n\n \u00A9 atoms for peace",
+    tweetId: null,
+  }
 
   if (artist === "thom") {
     paramsToSend = thomYorkeParams;
@@ -35,6 +43,9 @@ const sendScheduleTweet = () => {
   }
   else if (artist === "radiohead") {
     paramsToSend = radioheadParams;
+  }
+  else if (artist === "atoms") {
+    paramsToSend = atomsForPeaceParams;
   }
   else paramsToSend = radioheadParams;
 

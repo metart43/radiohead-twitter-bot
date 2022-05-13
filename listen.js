@@ -5,7 +5,7 @@ const radioheadTwitterId = "10509537";
 const thomYorkeTwitterId = "108382988";
 const smileIdTwitterId = "1393278025349967877";
 const parameters = {
-  track: "#radioheadbot, @r_adiohead_b, #r_adiohead_b, #Radioheadbot",
+  track: "#radioheadbot, @r_adiohead_b, #r_adiohead_b, #Radioheadbot, radiohead bot",
   // follow: "1009479715999092741, 10509537, 108382988",
 };
 
