@@ -51,12 +51,10 @@ const scrapeLyrics = async ({ artist, song }) => {
       if (lyricsDivExists) {
         lyrics = await page.evaluate(({ lyricsSelector }) => {
           const nonClassNonIdDivsArray = document.querySelectorAll(lyricsSelector);
-          if (nonClassNonIdDivsArray && nonClassNonIdDivsArray.length > 1) {
-            return nonClassNonIdDivsArray[nonClassNonIdDivsArray.length - 1].innerText
+          if (nonClassNonIdDivsArray) {
+            return nonClassNonIdDivsArray[0].innerText
               .trim()
               .split("\n");
-          } else if (nonClassNonIdDivsArray) {
-            return nonClassNonIdDivsArray[0].innerText.trim().split("\n");
           } else {
             return null;
           }

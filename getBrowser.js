@@ -1,7 +1,6 @@
 const chromium = require("chrome-aws-lambda");
 
 const getBrowser = async () => {
-  console.log("here?")
   //helper function to launch browser. Function is beign reused to make sure browser is running.
   try {
     browser = await chromium.puppeteer.launch({

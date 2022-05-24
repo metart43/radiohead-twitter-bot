@@ -36,6 +36,7 @@ module.exports.bot = async (params) => {
 
 module.exports.likeTweet = async (params) => {
   const { id } = params;
+  console.log("ID", { id }, "typeof id", typeof id)
   try {
     await client.post("favorites/create", { id });
     console.log("handler.js liked tweet");

@@ -5,7 +5,7 @@ const radioheadTwitterId = "10509537";
 const thomYorkeTwitterId = "108382988";
 const smileIdTwitterId = "1393278025349967877";
 const parameters = {
-  track: "#radioheadbot, @r_adiohead_b, #r_adiohead_b, #Radioheadbot, radiohead bot",
+  track: "#radioheadbot, @r_adiohead_b, #r_adiohead_b, #Radioheadbot",
   // follow: "1009479715999092741, 10509537, 108382988",
 };
 
@@ -18,7 +18,7 @@ const likeParams = {
 module.exports.like = async () =>
   client
     .stream("statuses/filter", likeParams)
-    .on("start", (response) => {})
+    .on("start", (response) => { })
     .on("data", ({ text, user, id_str, retweeted, is_quote_status }) => {
       console.log("FOLLOW STREAM DATA");
       console.log(
@@ -34,7 +34,7 @@ module.exports.like = async () =>
         "origin decription:",
         user && user.description,
         "\n",
-        id_str,
+        "tweet_id", id_str,
         "\n",
         "retweeted:",
         retweeted,
