@@ -3,6 +3,7 @@ let page;
 
 const selectors = {
   searchResultTable: ".table-condensed > tbody",
+  actionSearchButton: ".btn.btn-primary",
   firstSongSelector: (childNumber) => `tr:nth-child(${childNumber}) td > a`,
   lyricsSelector: "div:not([class]):not([id]):not([style])",
 };
@@ -19,7 +20,14 @@ const scrapeLyrics = async ({ artist, song }) => {
     page = await browser.newPage();
     page.setDefaultNavigationTimeout(0);
     await page.goto(url.href);
+    await page.waitForSelector(".search");
+    await page.evaluate(() => {
+      document.querySelector(".search").submit();
+    });
+    console.log("searching for lyrics");
+    await page.waitForSelector(selectors.searchResultTable);
     const searchResultTable = await page.$(selectors.searchResultTable);
+    console.log("searchResultTable", searchResultTable)
     if (!searchResultTable) {
       lyrics = null;
       console.log("no search results");
@@ -51,8 +59,8 @@ const scrapeLyrics = async ({ artist, song }) => {
       if (lyricsDivExists) {
         lyrics = await page.evaluate(({ lyricsSelector }) => {
           const nonClassNonIdDivsArray = document.querySelectorAll(lyricsSelector);
-          if (nonClassNonIdDivsArray) {
-            return nonClassNonIdDivsArray[0].innerText
+          if (nonClassNonIdDivsArray && nonClassNonIdDivsArray.length > 2) {
+            return nonClassNonIdDivsArray[2].innerText
               .trim()
               .split("\n");
           } else {
