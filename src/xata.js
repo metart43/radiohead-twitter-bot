@@ -12,14 +12,25 @@ const tables = [
       { name: "releaseDate", type: "string" },
       { name: "spotifyId", type: "string" },
       { name: "name", type: "string", defaultValue: "undefined" },
+      { name: "artist", type: "link", link: { table: "artists" } },
     ],
   },
   {
     name: "songs",
     columns: [
-      { name: "albumId", type: "link", link: { table: "albums" } },
+      { name: "album", type: "link", link: { table: "albums" } },
       { name: "name", type: "string" },
       { name: "lyrics", type: "multiple" },
+      { name: "artist", type: "link", link: { table: "artists" } },
+    ],
+  },
+  {
+    name: "artists",
+    columns: [
+      { name: "name", type: "string" },
+      { name: "spotifyId", type: "string", unique: true },
+      { name: "copyright", type: "string" },
+      { name: "twitterId", type: "string" },
     ],
   },
 ];

@@ -1,8 +1,8 @@
 {
   "name": "radiohead-twitter-bot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Twitter bot scrappers Radiohead lyrics from AZLyrics.com",
-  "main": "handler.js",
+  "main": "src/handler.js",
   "dependencies": {
     "@xata.io/client": "^0.21.5",
     "axios": "^1.2.1",
@@ -13,9 +13,7 @@
   "engines": {
     "node": "19.x"
   },
-  "repository": {
-    "url": "https://github.com/metart43/radiohead-twittter-bot/"
-  },
+  "repository": "https://github.com/metart43/radiohead-twittter-bot/",
   "license": "MIT",
   "keywords": [
     "node",
@@ -26,10 +24,12 @@
   ],
   "devDependencies": {
     "@xata.io/cli": "^0.11.5",
+    "eslint": "^8.30.0",
     "prettier": "^2.8.1",
     "puppeteer": "^19.4.1"
   },
   "env": {
     "__DEV__": "true"
-  }
+  },
+  "author": "Artem Metelskyi <artem@qured.com>"
 }

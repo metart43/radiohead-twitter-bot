@@ -47,7 +47,6 @@ const handleLongTweets = async ({ tweetText, tweetId, copyright }) => {
 
 }
 
-
 const tweet = async (lyrics, number, copyright, tweetId) => {
   let tweetText = combineLyrics(lyrics, number);
   let status;

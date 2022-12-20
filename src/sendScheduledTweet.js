@@ -1,3 +1,4 @@
+require("dotenv").config();
 const handler = require("./handler");
 
 const args = process.argv.slice(2)
@@ -6,6 +7,7 @@ const tweetId = args[1] || null;
 
 const sendScheduleTweet = () => {
   let paramsToSend;
+
   const thomYorkeParams = {
     limit: 20,
     artist: "thom yorke",
@@ -17,20 +19,20 @@ const sendScheduleTweet = () => {
     limit: 20,
     artist: "the smile",
     copyright: "\n\n \u00A9 @thesmiletheband",
-    artistId: "6styCzc1Ej4NxISL0LiigM",
+    artistSpotifyId: "6styCzc1Ej4NxISL0LiigM",
     tweetId,
   };
   const radioheadParams = {
     artist: "radiohead",
-    artistId: "4Z8W4fKeB5YxbusRsdQVPb",
+    artistSpotifyId: "4Z8W4fKeB5YxbusRsdQVPb",
     limit: 38,
     copyright: "\n\n \u00A9 @Radiohead",
     tweetId,
-  }; 
+  };
 
   const atomsForPeaceParams = {
     artist: "atoms for peace",
-    artistId: "7tA9Eeeb68kkiG9Nrvuzmi",
+    artistSpotifyId: "7tA9Eeeb68kkiG9Nrvuzmi",
     limit: 12,
     copyright: "\n\n \u00A9 atoms for peace",
     tweetId,
