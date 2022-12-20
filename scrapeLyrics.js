@@ -27,11 +27,10 @@ const scrapeLyrics = async ({ artist, song }) => {
     console.log("searching for lyrics");
     await page.waitForSelector(selectors.searchResultTable);
     const searchResultTable = await page.$(selectors.searchResultTable);
-    console.log("searchResultTable", searchResultTable)
     if (!searchResultTable) {
       lyrics = null;
       console.log("no search results");
-      return;
+      throw new Error("No search results");
     }
     const numberOfSongs = await analyzeSearchResults();
     if (numberOfSongs === 0) {
@@ -56,16 +55,18 @@ const scrapeLyrics = async ({ artist, song }) => {
       await page.waitForSelector(selectors.lyricsSelector);
       const lyricsDivExists = await page.$(selectors.lyricsSelector);
       console.log("waiting for lyrics to load");
+
       if (lyricsDivExists) {
         lyrics = await page.evaluate(({ lyricsSelector }) => {
+          let lyricsToReturn;
           const nonClassNonIdDivsArray = document.querySelectorAll(lyricsSelector);
-          if (nonClassNonIdDivsArray && nonClassNonIdDivsArray.length > 2) {
-            return nonClassNonIdDivsArray[2].innerText
-              .trim()
-              .split("\n");
-          } else {
-            return null;
-          }
+          nonClassNonIdDivsArray.forEach((div) => {
+            if (div.clientWidth > 0 && div.clientHeight > 0 && div.innerText !== "") {
+              lyricsToReturn = div.innerText.trim().split("\n");
+              return;
+            }
+          });
+          return lyricsToReturn;
         }, selectors);
       }
     }

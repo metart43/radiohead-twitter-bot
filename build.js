@@ -27,8 +27,7 @@ const connectLyricsWithDiscography = async () => {
       songs: [],
     };
     for (const song of songs) {
-      // const lyrics = await scrapeLyrics({ artist: "Radiohead", song });
-      const lyrics = ["test lyrics"];
+      const lyrics = await scrapeLyrics({ artist: "Radiohead", song });
       if (lyrics && lyrics.length) {
         albumObject.songs.push({
           name: song,
