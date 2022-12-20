@@ -2,7 +2,7 @@ require("dotenv").config();
 const client = require("./client");
 const handler = require("./handler");
 const { radioheadTwitterId, thomYorkeTwitterId, smileIdTwitterId } = require("./constants");
-const { getXataClient } = require("../xata");
+const { getXataClient } = require("./xata");
 const xata = getXataClient();
 
 const parameters = {
@@ -19,7 +19,7 @@ const likeParams = {
 module.exports.like = async () =>
   client
     .stream("statuses/filter", likeParams)
-    .on("start")
+    .on("start", () => console.log("stream started"))
     .on("data", ({ text, user, id_str, retweeted, is_quote_status }) => {
       console.log(
         "tweet text:",
@@ -51,7 +51,7 @@ module.exports.stream = async () => {
   const { copyright, spotifyId: artistSpotifyId } = randomArtist;
   client
     .stream("statuses/filter", parameters)
-    .on("start")
+    .on("start", () => console.log("stream started"))
     .on("data", ({ text, user, id_str, retweeted, is_quote_status }) => {
       console.log(
         "tweet text:",
