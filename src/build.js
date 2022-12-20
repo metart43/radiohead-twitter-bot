@@ -1,5 +1,5 @@
 const getDiscography = require("get-artist-discography/getDiscography");
-const scrapeLyrics = require("./scrapeLyrics");
+const scrapeLyrics = require("../scrapeLyrics");
 
 const discographyArray = [];
 
@@ -14,7 +14,7 @@ const connectLyricsWithDiscography = async () => {
   const limit = 38;
   const discography = await getDiscography(radioheadArtistId, limit);
 
-  for (album of discography) {
+  for (const album of discography) {
     const { songs, release_date, images, spotifyId } = Object.values(album)[0];
     const albumName = Object.keys(album)[0];
     console.log(" album.songs", songs);

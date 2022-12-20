@@ -1,11 +1,11 @@
-const chromium = require("chrome-aws-lambda");
+const puppeteer = require("puppeteer");
 
 const getBrowser = async () => {
   //helper function to launch browser. Function is beign reused to make sure browser is running.
+  let browser;
   try {
-    browser = await chromium.puppeteer.launch({
-      headless: true,
-      executablePath: await chromium.executablePath,
+    browser = await puppeteer.launch({
+      headless: false,
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
