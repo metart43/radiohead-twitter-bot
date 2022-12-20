@@ -11,14 +11,15 @@ const tables = [
     columns: [
       { name: "releaseDate", type: "string" },
       { name: "spotifyId", type: "string" },
-      { name: "songs", type: "link", link: { table: "songs" } },
+      { name: "name", type: "string", defaultValue: "undefined" },
     ],
   },
   {
     name: "songs",
     columns: [
+      { name: "albumId", type: "link", link: { table: "albums" } },
       { name: "name", type: "string" },
-      { name: "lyrics", type: "text" },
+      { name: "lyrics", type: "multiple" },
     ],
   },
 ];

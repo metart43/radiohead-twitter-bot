@@ -11,7 +11,7 @@
     "twitter-lite": "^1.1.0"
   },
   "engines": {
-    "node": "16.x"
+    "node": "19.x"
   },
   "repository": {
     "url": "https://github.com/metart43/radiohead-twittter-bot/"
