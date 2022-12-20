@@ -9,31 +9,24 @@ const sendScheduleTweet = () => {
   let paramsToSend;
 
   const thomYorkeParams = {
-    limit: 20,
     artist: "thom yorke",
     copyright: "\n\n \u00A9 @thomyorke",
-    artistId: "4CvTDPKA6W06DRfBnZKrau",
+    artistSpotifyId: "4CvTDPKA6W06DRfBnZKrau",
     tweetId,
   };
   const theSmileParams = {
-    limit: 20,
-    artist: "the smile",
     copyright: "\n\n \u00A9 @thesmiletheband",
     artistSpotifyId: "6styCzc1Ej4NxISL0LiigM",
     tweetId,
   };
   const radioheadParams = {
-    artist: "radiohead",
     artistSpotifyId: "4Z8W4fKeB5YxbusRsdQVPb",
-    limit: 38,
     copyright: "\n\n \u00A9 @Radiohead",
     tweetId,
   };
 
   const atomsForPeaceParams = {
-    artist: "atoms for peace",
     artistSpotifyId: "7tA9Eeeb68kkiG9Nrvuzmi",
-    limit: 12,
     copyright: "\n\n \u00A9 atoms for peace",
     tweetId,
   }

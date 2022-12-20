@@ -5,7 +5,7 @@ const xata = getXataClient();
 const { removeRemastered } = require("./utils/misc");
 
 const connectLyricsWithDiscography = async () => {
-  const artistId = "4CvTDPKA6W06DRfBnZKrau";
+  const artistId = "7tA9Eeeb68kkiG9Nrvuzmi";
   const limit = 38;
   const discography = await getDiscography(artistId, limit);
 
@@ -19,7 +19,7 @@ const connectLyricsWithDiscography = async () => {
         releaseDate: release_date,
         spotifyId: spotifyId,
         name: albumName,
-        artist: { id: "rec_cegue7a4nbkn6p5jm1cg" },
+        artist: { id: "rec_ceguemd6k6j1ahqr413g" },
       });
       console.log("album created", createdAlbum);
       for (const song of songs) {
@@ -27,13 +27,13 @@ const connectLyricsWithDiscography = async () => {
         // await for 30 minute before scraping the next song
         console.log("Preparing to scrape song | waiting ofr 30 seconds", sanitizedSongName)
         await new Promise((resolve) => setTimeout(resolve, 30000));
-        const lyrics = await scrapeLyrics({ artist: "Thom Yorke", song: sanitizedSongName });
+        const lyrics = await scrapeLyrics({ artist: "atoms for peace", song: sanitizedSongName });
         if (lyrics && lyrics.length) {
           const createdSong = await xata.db.songs.create({
             name: sanitizedSongName,
             album: createdAlbum.id,
             lyrics,
-            artist: { id: "rec_cegue7a4nbkn6p5jm1cg" },
+            artist: { id: "rec_ceguemd6k6j1ahqr413g" },
           });
           console.log("createdSong", createdSong);
         } else {
@@ -41,7 +41,7 @@ const connectLyricsWithDiscography = async () => {
           await xata.db.songs.create({
             name: song,
             album: createdAlbum.id,
-            artist: { id: "rec_cegue7a4nbkn6p5jm1cg" },
+            artist: { id: "rec_ceguemd6k6j1ahqr413g" },
           });
         }
       }

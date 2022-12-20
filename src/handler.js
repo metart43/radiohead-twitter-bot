@@ -13,7 +13,9 @@ module.exports.bot = async ({ copyright, artistSpotifyId, tweetId }) => {
     await tweet(lyrics, numberOfParagraphs, copyright, tweetId);
     console.log({ message: "success" });
   } else {
-    console.log({ message: "couldn't generate lyrics" });
+    // recursively call this function until i get lyrics
+    console.log("no lyrics, trying again");
+    await module.exports.bot({ copyright, artistSpotifyId, tweetId });
   }
 };
 
