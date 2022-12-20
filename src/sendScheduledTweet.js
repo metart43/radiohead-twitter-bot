@@ -10,24 +10,24 @@ const sendScheduleTweet = () => {
 
   const thomYorkeParams = {
     artist: "thom yorke",
-    copyright: "\n\n \u00A9 @thomyorke",
+    copyright: "@thomyorke",
     artistSpotifyId: "4CvTDPKA6W06DRfBnZKrau",
     tweetId,
   };
   const theSmileParams = {
-    copyright: "\n\n \u00A9 @thesmiletheband",
+    copyright: "@thesmiletheband",
     artistSpotifyId: "6styCzc1Ej4NxISL0LiigM",
     tweetId,
   };
   const radioheadParams = {
     artistSpotifyId: "4Z8W4fKeB5YxbusRsdQVPb",
-    copyright: "\n\n \u00A9 @Radiohead",
+    copyright: "@Radiohead",
     tweetId,
   };
 
   const atomsForPeaceParams = {
     artistSpotifyId: "7tA9Eeeb68kkiG9Nrvuzmi",
-    copyright: "\n\n \u00A9 atoms for peace",
+    copyright: "atoms for peace",
     tweetId,
   }
 

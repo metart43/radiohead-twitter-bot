@@ -6,11 +6,10 @@ const { countParagraphs } = require("./utils/misc");
 
 module.exports.bot = async ({ copyright, artistSpotifyId, tweetId }) => {
   const { song, date, lyrics, albumName } = await getRandomSong({ artistSpotifyId });
-  const songInfo = ` - ${song} \n${date} #${albumName}`;
-  copyright += songInfo;
+  const sanitizedCopyright = `\n\n \u00A9 ${copyright} - ${song} \n${date} #${albumName}`
   if (lyrics && lyrics.length > 0) {
     const numberOfParagraphs = countParagraphs(lyrics);
-    await tweet(lyrics, numberOfParagraphs, copyright, tweetId);
+    await tweet(lyrics, numberOfParagraphs, sanitizedCopyright, tweetId);
     console.log({ message: "success" });
   } else {
     // recursively call this function until i get lyrics

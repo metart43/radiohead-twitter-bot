@@ -45,10 +45,7 @@ module.exports.like = async () =>
     });
 
 module.exports.stream = async () => {
-  const records = await xata.db.artists.getAll();
-  const artists = records.map(({ name, spotifyId }) => ({ name, spotifyId }));
-  const randomArtist = artists[Math.floor(Math.random() * artists.length)];
-  const { copyright, spotifyId: artistSpotifyId } = randomArtist;
+  const artists = await xata.db.artists.getAll();
   client
     .stream("statuses/filter", parameters)
     .on("start", () => console.log("stream started"))
@@ -69,6 +66,9 @@ module.exports.stream = async () => {
         "tweet_id:",
         id_str
       );
+      const randomArtist = artists[Math.floor(Math.random() * artists.length)];
+      console.log({ randomArtist })
+      const { copyright, spotifyId: artistSpotifyId } = randomArtist;
       if (retweeted || is_quote_status || text.startsWith("RT")) {
         return;
       } else {
