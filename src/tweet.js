@@ -29,13 +29,12 @@ const combineLyrics = (lyrics, number) => {
 
 const handleLongTweets = async ({ tweetText, tweetId, copyright }) => {
   const middleOfLyrics = tweetText.length / 2
-  const indexOfFirstSpaceInTheMiddle = string.indexOf(" ", middleOfLyrics)
+  const indexOfFirstSpaceInTheMiddle = tweetText.indexOf(" ", middleOfLyrics)
   const firstHalf = tweetText.substring(0, indexOfFirstSpaceInTheMiddle)
   const secondHalf = tweetText.substring(indexOfFirstSpaceInTheMiddle)
 
   try {
     const { text: firstTweet, id } = await client.post("statuses/update", { status: firstHalf, in_reply_to_status_id: tweetId, auto_populate_reply_metadata: true });
-    postedTweetId = id;
     console.log("tweet.js#handleLongTweets#first half", firstTweet);
     const { text: secondTweet, id: id2 } = await client.post("statuses/update", { status: secondHalf, in_reply_to_status_id: id, auto_populate_reply_metadata: true });
     console.log("tweet.js#handleLongTweets#second half", secondTweet);

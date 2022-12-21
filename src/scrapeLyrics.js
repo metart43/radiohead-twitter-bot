@@ -13,6 +13,7 @@ const scrapeLyrics = async ({ artist, song }) => {
   let browser;
   let lyrics;
   let firstSongChildNumber;
+  let firstSongAnchorTag;
   try {
     browser = await getBrowser();
     const url = new URL(`https://search.azlyrics.com/search.php?q=${artist}-${song}`);
@@ -71,11 +72,12 @@ const scrapeLyrics = async ({ artist, song }) => {
       }
     }
     console.log("scrapeLyrics.js#scrapedLyrics => ", lyrics);
+    return lyrics;
   } catch (e) {
     console.error("Failed to scrape lyrics scrapeLyrics.js#error", e);
+    return null;
   } finally {
     if (browser) await browser.close();
-    return lyrics;
   }
 };
 
