@@ -12,6 +12,6 @@ const sendTweet = async () => {
   handler.bot({ copyright, artistSpotifyId });
 };
 
-// Run sendScheduleTweet every 30 minutes
-const interval = 30 * 60 * 10; // 30 minutes in milliseconds
+// Run sendScheduleTweet every 30 minute
+const interval = 30 * 60 * 1000;// 30 min in mills
 setInterval(sendTweet, interval);
