@@ -3,6 +3,7 @@ let page;
 
 const selectors = {
   searchResultTable: ".table-condensed > tbody",
+  actionSearchButton: ".btn.btn-primary",
   firstSongSelector: (childNumber) => `tr:nth-child(${childNumber}) td > a`,
   lyricsSelector: "div:not([class]):not([id]):not([style])",
 };
@@ -12,17 +13,25 @@ const scrapeLyrics = async ({ artist, song }) => {
   let browser;
   let lyrics;
   let firstSongChildNumber;
+  let firstSongAnchorTag;
   try {
     browser = await getBrowser();
     const url = new URL(`https://search.azlyrics.com/search.php?q=${artist}-${song}`);
+    console.log("url for scraping", url);
     page = await browser.newPage();
     page.setDefaultNavigationTimeout(0);
     await page.goto(url.href);
+    await page.waitForSelector(".search");
+    await page.evaluate(() => {
+      document.querySelector(".search").submit();
+    });
+    console.log("searching for lyrics");
+    await page.waitForSelector(selectors.searchResultTable);
     const searchResultTable = await page.$(selectors.searchResultTable);
     if (!searchResultTable) {
       lyrics = null;
       console.log("no search results");
-      return;
+      throw new Error("No search results");
     }
     const numberOfSongs = await analyzeSearchResults();
     if (numberOfSongs === 0) {
@@ -47,27 +56,28 @@ const scrapeLyrics = async ({ artist, song }) => {
       await page.waitForSelector(selectors.lyricsSelector);
       const lyricsDivExists = await page.$(selectors.lyricsSelector);
       console.log("waiting for lyrics to load");
+
       if (lyricsDivExists) {
         lyrics = await page.evaluate(({ lyricsSelector }) => {
+          let lyricsToReturn;
           const nonClassNonIdDivsArray = document.querySelectorAll(lyricsSelector);
-          if (nonClassNonIdDivsArray && nonClassNonIdDivsArray.length > 1) {
-            return nonClassNonIdDivsArray[nonClassNonIdDivsArray.length - 1].innerText
-              .trim()
-              .split("\n");
-          } else if (nonClassNonIdDivsArray) {
-            return nonClassNonIdDivsArray[0].innerText.trim().split("\n");
-          } else {
-            return null;
-          }
+          nonClassNonIdDivsArray.forEach((div) => {
+            if (div.clientWidth > 0 && div.clientHeight > 0 && div.innerText !== "") {
+              lyricsToReturn = div.innerText.trim().split("\n");
+              return;
+            }
+          });
+          return lyricsToReturn;
         }, selectors);
       }
     }
     console.log("scrapeLyrics.js#scrapedLyrics => ", lyrics);
+    return lyrics;
   } catch (e) {
     console.error("Failed to scrape lyrics scrapeLyrics.js#error", e);
+    return null;
   } finally {
     if (browser) await browser.close();
-    return lyrics;
   }
 };
 

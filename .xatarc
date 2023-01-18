@@ -1,0 +1,7 @@
+{
+  "databaseURL": "https://Artem-Metelskyi-s-workspace-n68sva.eu-west-1.xata.sh/db/rh-lyrics",
+  "codegen": {
+    "output": "src/xata.js",
+    "moduleType": "cjs"
+  }
+}
