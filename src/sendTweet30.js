@@ -4,7 +4,7 @@ const { getXataClient } = require("./xata");
 const xata = getXataClient();
 
 const sendTweet = async () => {
-  const artists = await xata.db.artists.getAll();
+  const artists = await xata.db.artists.filter({  spotifyId: "4Z8W4fKeB5YxbusRsdQVPb" } ).getAll();
   const randomArtist = artists[Math.floor(Math.random() * artists.length)];
   console.log("src/sendTweet30.js", { randomArtist })
   const { copyright, spotifyId: artistSpotifyId } = randomArtist;
@@ -13,5 +13,5 @@ const sendTweet = async () => {
 };
 
 // Run sendScheduleTweet every 30 minute
-const interval = 30 * 60 * 1000;// 30 min in mills
+const interval = 1000 * 60 * 60;// 30 min in mills
 setInterval(sendTweet, interval);
