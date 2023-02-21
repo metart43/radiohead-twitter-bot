@@ -1,5 +1,6 @@
 require("dotenv").config();
 const handler = require("./handler");
+const { radioheadSpotifyId, thomYorkeSpotifyId, theSmileSpotifyId, atomsForPeaceSpotifyId } = require("./constants");
 
 const args = process.argv.slice(2)
 const artist = args[0];
@@ -11,22 +12,22 @@ const sendScheduleTweet = () => {
   const thomYorkeParams = {
     artist: "thom yorke",
     copyright: "@thomyorke",
-    artistSpotifyId: "4CvTDPKA6W06DRfBnZKrau",
+    artistSpotifyId: thomYorkeSpotifyId,
     tweetId,
   };
   const theSmileParams = {
     copyright: "@thesmiletheband",
-    artistSpotifyId: "6styCzc1Ej4NxISL0LiigM",
+    artistSpotifyId: theSmileSpotifyId,
     tweetId,
   };
   const radioheadParams = {
-    artistSpotifyId: "4Z8W4fKeB5YxbusRsdQVPb",
+    artistSpotifyId: radioheadSpotifyId,
     copyright: "@Radiohead",
     tweetId,
   };
 
   const atomsForPeaceParams = {
-    artistSpotifyId: "7tA9Eeeb68kkiG9Nrvuzmi",
+    artistSpotifyId: atomsForPeaceSpotifyId,
     copyright: "atoms for peace",
     tweetId,
   }
