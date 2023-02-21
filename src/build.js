@@ -4,10 +4,22 @@ const { getXataClient } = require("./xata");
 const xata = getXataClient();
 const { removeRemastered } = require("./utils/misc");
 
+/**
+  * This function connects lyrics with discography.
+  * It retrieves the discography of an artist from the Spotify API, then loops through each album in the discography,
+  * creates an album with its details, and loops through each song in the album. For each song, it waits for 30 seconds
+  * before scraping the lyrics using the scrapeLyrics function. If lyrics are found, it creates a song with its
+  * details, including the lyrics. If no lyrics are found, it creates a song without lyrics. The function logs the process
+  * to the console as it runs.
+    @returns {Promise<void>} - A Promise that resolves when the function is finished.
+    */
+
+
+
 const connectLyricsWithDiscography = async () => {
-  const artistId = "7tA9Eeeb68kkiG9Nrvuzmi";
+  const spotifyArtistId = ""
   const limit = 38;
-  const discography = await getDiscography(artistId, limit);
+  const discography = await getDiscography(spotifyArtistId, limit);
 
   for (const album of discography) {
     const { songs, release_date, spotifyId } = Object.values(album)[0];
@@ -18,7 +30,7 @@ const connectLyricsWithDiscography = async () => {
       releaseDate: release_date,
       spotifyId: spotifyId,
       name: albumName,
-      artist: { id: "rec_ceguemd6k6j1ahqr413g" },
+      artist: { id: "" },
     });
     console.log("album created", createdAlbum);
     for (const song of songs) {
@@ -32,7 +44,7 @@ const connectLyricsWithDiscography = async () => {
           name: sanitizedSongName,
           album: createdAlbum.id,
           lyrics,
-          artist: { id: "rec_ceguemd6k6j1ahqr413g" },
+          artist: { id: "" },
         });
         console.log("createdSong", createdSong);
       } else {
@@ -40,7 +52,7 @@ const connectLyricsWithDiscography = async () => {
         await xata.db.songs.create({
           name: song,
           album: createdAlbum.id,
-          artist: { id: "rec_ceguemd6k6j1ahqr413g" },
+          artist: { id: "" },
         });
       }
     }
