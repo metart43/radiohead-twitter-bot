@@ -55,8 +55,15 @@ const tweet = async (lyrics, number, copyright, tweetId) => {
     tweetText += copyright;
   } else if (tweetText.length + copyright.length > 280) {
     try {
+      const replyOptions = {
+        status: tweetText,
+        auto_populate_reply_metadata: true,
+      };
+      if (tweetId) {
+        replyOptions.in_reply_to_status_id = tweetId;
+      }
       console.log("if copyright doesn't fit with tweet text");
-      const { id } = await client.post("statuses/update", { status: tweetText, in_reply_to_status_id: tweetId, auto_populate_reply_metadata: true });
+      const { id } = await client.post("statuses/update", { replyOptions });
       const { text } = await client.post("statuses/update", { status: copyright, in_reply_to_status_id: id, auto_populate_reply_metadata: true });
       console.log("tweet.js#tweet#id", text);
     } catch (error) {
@@ -72,7 +79,6 @@ const tweet = async (lyrics, number, copyright, tweetId) => {
     if (tweetId) {
       replyOptions.in_reply_to_status_id = tweetId;
     }
-
     const { text } = await client.post("statuses/update", replyOptions);
     status = "success";
     console.log("tweet.js tweeted text:", text);

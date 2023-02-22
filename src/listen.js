@@ -31,9 +31,9 @@ const startStream = (params, callback) => {
   return stream;
 };
 
-module.exports.like = () =>
+module.exports.like = () => {
+  let counter = 0;
   startStream(likeParams, ({ text, user, id_str, retweeted, is_quote_status }) => {
-    let counter = 0;
     console.log(
       "tweet text:",
       text,
@@ -59,6 +59,7 @@ module.exports.like = () =>
       counter++;
     }
   });
+};
 
 module.exports.reply = async () => {
   const artists = await xata.db.artists.getAll();
