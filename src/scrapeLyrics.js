@@ -53,20 +53,20 @@ const scrapeLyrics = async ({ artist, song }) => {
       const url = await getFirstSongHref(firstSongChildNumber);
       console.log("url", url);
       await page.goto(url);
+     
       await page.waitForSelector(selectors.lyricsSelector);
       const lyricsDivExists = await page.$(selectors.lyricsSelector);
+      // await new Promise(resolve => setTimeout(resolve, 30000));
       console.log("waiting for lyrics to load");
 
       if (lyricsDivExists) {
         lyrics = await page.evaluate(({ lyricsSelector }) => {
           let lyricsToReturn;
-          const nonClassNonIdDivsArray = document.querySelectorAll(lyricsSelector);
-          nonClassNonIdDivsArray.forEach((div) => {
-            if (div.clientWidth > 0 && div.clientHeight > 0 && div.innerText !== "") {
-              lyricsToReturn = div.innerText.trim().split("\n");
-              return;
-            }
-          });
+          const nonClassNonIdDiv = document.querySelector(lyricsSelector) 
+    
+          if (nonClassNonIdDiv.clientWidth > 0 && nonClassNonIdDiv.clientHeight > 0 && nonClassNonIdDiv.innerText !== "") {
+            lyricsToReturn = nonClassNonIdDiv.innerText.trim().split("\n");
+          }
           return lyricsToReturn;
         }, selectors);
       }

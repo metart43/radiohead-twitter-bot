@@ -14,6 +14,7 @@ const tables = [
       { name: "name", type: "string", defaultValue: "undefined" },
       { name: "artist", type: "link", link: { table: "artists" } },
     ],
+    revLinks: [{ column: "album", table: "songs" }],
   },
   {
     name: "songs",
@@ -31,6 +32,10 @@ const tables = [
       { name: "spotifyId", type: "string", unique: true },
       { name: "copyright", type: "string" },
       { name: "twitterId", type: "string" },
+    ],
+    revLinks: [
+      { column: "artist", table: "albums" },
+      { column: "artist", table: "songs" },
     ],
   },
 ];

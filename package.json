@@ -4,11 +4,11 @@
   "description": "Twitter bot scrappers Radiohead lyrics from AZLyrics.com",
   "main": "src/handler.js",
   "dependencies": {
-    "@xata.io/client": "^0.21.5",
-    "axios": "^1.2.1",
+    "@xata.io/client": "^0.28.2",
+    "axios": "^1.6.2",
     "get-artist-discography": "0.0.4",
     "puppeteer-core": "^19.4.1",
-    "twitter-lite": "^1.1.0"
+    "twitter-api-v2": "^1.16.0"
   },
   "engines": {
     "node": "19.x"
@@ -32,5 +32,5 @@
   "env": {
     "__DEV__": "true"
   },
-  "author": "Artem Metelskyi <artem@qured.com>"
+  "author": "Artem Metelskyi <metelskyi88@gmail.com>"
 }

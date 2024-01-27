@@ -27,67 +27,56 @@ const combineLyrics = (lyrics, number) => {
   return status;
 };
 
-const handleLongTweets = async ({ tweetText, tweetId, copyright }) => {
-  const middleOfLyrics = tweetText.length / 2
-  const indexOfFirstSpaceInTheMiddle = tweetText.indexOf(" ", middleOfLyrics)
-  const firstHalf = tweetText.substring(0, indexOfFirstSpaceInTheMiddle)
-  const secondHalf = tweetText.substring(indexOfFirstSpaceInTheMiddle)
+const postTweet = async (text, replyId = null) => {
+  const options = {
+    ...(replyId && { in_reply_to_tweet_id: replyId })
+  };
 
   try {
-    const { text: firstTweet, id } = await client.post("statuses/update", { status: firstHalf, in_reply_to_status_id: tweetId, auto_populate_reply_metadata: true });
-    console.log("tweet.js#handleLongTweets#first half", firstTweet);
-    const { text: secondTweet, id: id2 } = await client.post("statuses/update", { status: secondHalf, in_reply_to_status_id: id, auto_populate_reply_metadata: true });
-    console.log("tweet.js#handleLongTweets#second half", secondTweet);
-    const { text } = await client.post("statuses/update", { status: copyright, in_reply_to_status_id: id2, auto_populate_reply_metadata: true });
-    console.log("tweet.js#handleLongTweets#copyright", text);
+    const { data } = await client.v2.tweet(text, options);
+    console.log(`Tweet posted: ${data.text}`);
+    return data.id;
   } catch (error) {
-    console.error("tweet.js#handleLongTweets#error", error);
+    console.error('Error posting tweet:', error);
+    throw error; // Rethrow to handle in calling function
   }
+};
 
-}
+const handleLongTweets = async ({ tweetText, tweetId, copyright }) => {
+  const middleOfLyrics = tweetText.length / 2;
+  const indexOfFirstSpaceInTheMiddle = tweetText.indexOf(' ', middleOfLyrics);
+  const firstHalf = tweetText.substring(0, indexOfFirstSpaceInTheMiddle);
+  const secondHalf = tweetText.substring(indexOfFirstSpaceInTheMiddle);
+
+  try {
+    const firstTweetId = await postTweet(firstHalf, tweetId);
+    const secondTweetId = await postTweet(secondHalf, firstTweetId);
+    await postTweet(copyright, secondTweetId);
+  } catch (error) {
+    console.error('Error in handleLongTweets:', error);
+  }
+};
 
 const tweet = async (lyrics, number, copyright, tweetId) => {
   let tweetText = combineLyrics(lyrics, number);
-  let status;
-  if (tweetText.length > 280) {
-    handleLongTweets({ tweetText, tweetId, copyright });
-  } else if (tweetText.length + copyright.length < 280) {
-    tweetText += copyright;
-  } else if (tweetText.length + copyright.length > 280) {
-    try {
-      const replyOptions = {
-        status: tweetText,
-        auto_populate_reply_metadata: true,
-      };
-      if (tweetId) {
-        replyOptions.in_reply_to_status_id = tweetId;
-      }
-      console.log("if copyright doesn't fit with tweet text");
-      const { id } = await client.post("statuses/update", { replyOptions });
-      const { text } = await client.post("statuses/update", { status: copyright, in_reply_to_status_id: id, auto_populate_reply_metadata: true });
-      console.log("tweet.js#tweet#id", text);
-    } catch (error) {
-      console.error("if copyright doesn't fit with tweet text", error);
-    }
-  }
+  let status = 'pending';
 
   try {
-    const replyOptions = {
-      status: tweetText,
-      auto_populate_reply_metadata: true,
-    };
-    if (tweetId) {
-      replyOptions.in_reply_to_status_id = tweetId;
+    if (tweetText.length > 280) {
+      await handleLongTweets({ tweetText, tweetId, copyright });
+    } else {
+      const combinedText = tweetText + (tweetText.length + copyright.length <= 280 ? copyright : '');
+      const replyId = tweetText.length + copyright.length > 280 ? await postTweet(tweetText, tweetId) : tweetId;
+      await postTweet(combinedText, replyId);
     }
-    const { text } = await client.post("statuses/update", replyOptions);
-    status = "success";
-    console.log("tweet.js tweeted text:", text);
-  } catch (e) {
-    console.error("tweet.js#tweet#error tweeting", e);
-    status = e;
+    status = 'success';
+  } catch (error) {
+    console.error('Error in tweet function:', error);
+    status = 'error';
   } finally {
-    console.log("tweet.js status => ", status);
+    console.log('Tweet process status:', status);
   }
 };
+
 
 module.exports = tweet;
